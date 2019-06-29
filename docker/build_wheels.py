@@ -2,30 +2,15 @@ import os
 import subprocess
 
 
-CYTHON_VERSION = '0.28.0'
-CUPY_VERSION = '4.5.0'
+CYTHON_VERSION = '0.29.10'
+CUPY_VERSION = '6.1.0'
 PYNVVL_VERSION = '0.0.3a2'
 
 WHEEL_CONFIGS = {
-    '8.0': {
-        'lib': 'docker/lib/cuda-8.0',
-        'tag': 'mitmul/pynvvl:cuda-8.0-wheels',
-        'test': 'mitmul/pynvvl:cuda-8.0-test',
-    },
-    '9.0': {
-        'lib': 'docker/lib/cuda-9.0',
-        'tag': 'mitmul/pynvvl:cuda-9.0-wheels',
-        'test': 'mitmul/pynvvl:cuda-9.0-test',
-    },
-    '9.1': {
-        'lib': 'docker/lib/cuda-9.1',
-        'tag': 'mitmul/pynvvl:cuda-9.1-wheels',
-        'test': 'mitmul/pynvvl:cuda-9.1-test',
-    },
-    '9.2': {
-        'lib': 'docker/lib/cuda-9.2',
-        'tag': 'mitmul/pynvvl:cuda-9.2-wheels',
-        'test': 'mitmul/pynvvl:cuda-9.2-test',
+    '10.1': {
+        'lib': 'docker/lib/cuda-10.1',
+        'tag': 'mitmul/pynvvl:cuda-10.1-wheels',
+        'test': 'mitmul/pynvvl:cuda-10.1-test',
     },
 }
 
@@ -34,18 +19,18 @@ PYTHON_VERSIONS = {
         'python_tag': 'cp27',
         'linux_abi_tag': 'cp27mu',
     },
-    '3.4.7': {
-        'python_tag': 'cp34',
-        'linux_abi_tag': 'cp34m',
-    },
-    '3.5.1': {
-        'python_tag': 'cp35',
-        'linux_abi_tag': 'cp35m',
-    },
-    '3.6.0': {
-        'python_tag': 'cp36',
-        'linux_abi_tag': 'cp36m',
-    },
+    # '3.4.7': {
+    #     'python_tag': 'cp34',
+    #     'linux_abi_tag': 'cp34m',
+    # },
+    # '3.5.1': {
+    #     'python_tag': 'cp35',
+    #     'linux_abi_tag': 'cp35m',
+    # },
+    # '3.6.0': {
+    #     'python_tag': 'cp36',
+    #     'linux_abi_tag': 'cp36m',
+    # },
 }
 
 
@@ -89,7 +74,7 @@ def build_wheels(cuda_version):
             ' -t {tag}'
             ' bash -c'
             ' " \
-            ln -s /usr/local/nvidia/lib/libnvcuvid.so.1 /usr/local/lib/libnvcuvid.so && \
+            ln -s /usr/lib/x86_64-linux-gnu/libnvcuvid.so.1 /usr/local/lib/libnvcuvid.so && \
             pyenv global {python_version} && pyenv rehash && \
             cd /pynvvl && python setup.py bdist_wheel \
             -d dist/cuda-{cuda_version} \
@@ -167,4 +152,3 @@ for cuda_version, wheel_config in WHEEL_CONFIGS.items():
     print('-' * 10, 'Building for CUDA {}'.format(cuda_version), '-' * 10)
     build_wheels(cuda_version)
     print('=' * 30)
-
